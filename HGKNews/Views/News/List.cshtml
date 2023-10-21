@@ -1,0 +1,62 @@
+﻿@using HGKNews.Models.NewsItem;
+@model IEnumerable<NewsItemModel>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <h2>Search</h2>
+    <hr />
+
+    <form asp-action="List" method="post" class="mb-4">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search News..." name="searchQuery">
+            <button type="submit" class="btn btn-primary">Search</button>
+            <button type="button" onclick="clearSearch()" class="btn btn-secondary ms-3">Clear Search</button>
+        </div>
+    </form>
+</div>
+<script>
+    function clearSearch() {
+        document.querySelector('input[name="searchQuery"]').value = '';
+        document.querySelector('form').submit();
+    }
+</script>
+<div class="container mt-4 mb-5">
+    <h2>News</h2>
+    <hr />
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var news in Model)
+        {
+            <div class="col">
+                <div class="card h-100">
+                    @if (news.NewsPicture != null && news.NewsPicture.Length > 0)
+                    {
+                        var base64Image = Convert.ToBase64String(news.NewsPicture);
+                        <img src="data:image/png;base64,@base64Image" class="card-img-top" alt="News Picture">
+                    }
+                    else
+                    {
+                        <img src="~/images/11796.jpg" class="card-img-top" alt="Default Picture">
+                    }
+                <div class="card-body">
+                    <h5 class="card-title">@news.Title</h5>
+                    @{
+                        string truncatedContent = news.Content.Length > 15
+                            ? news.Content.Substring(0, 15) + "..."
+                            : news.Content;
+                    }
+                    <p class="card-text">@truncatedContent</p>
+
+                </div>
+                    <div class="card-footer">
+                        <a href="@Url.Action("Details", "News", new {id = news.Id })" class="btn btn-primary">Read More</a>
+                        <a href="@Url.Action("Edit", "News", new {id = news.Id })" class="btn btn-warning">Edit</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

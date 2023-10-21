@@ -1,0 +1,38 @@
+﻿@using HGKNews.Models.NewsItem;
+@model NewsItemModel
+
+    <div id="pdfarea" class="container mt-4">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <h2>@Model.Title</h2>
+                <p>Create Date : @Model.CreateOn.ToShortDateString()</p>
+                <p>News Date : @Model.NewsDate.ToShortDateString()</p>
+                <p>Author : @Model.Author</p>
+                <p>Category : @Model.Category</p>
+                <p>Country : @Model.Country</p>
+                <h3>Content : </h3>
+                <p>@Model.Content</p>
+                @if (Model.NewsPicture != null && Model.NewsPicture.Length > 0)
+                {
+                    var base64Image = Convert.ToBase64String(Model.NewsPicture);
+                    <img src="data:image/png;base64,@base64Image" class="img-fluid" alt="Haber Resmi">
+                }
+                <a href="@Url.Action("Index", "Home")" class="btn btn-primary">Ana Sayfaya Dön</a>
+                <a href="@Url.Action("List", "News")" class="btn btn-primary">Haberlere Dön</a>
+                <button class="btn btn-primary" id="downloadPDF"> Download PDF</button>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script>
+        document.getElementById('downloadPDF').addEventListener("click", () => {
+            const invoice = this.document.getElementById('pdfarea');
+            var opt = {
+                margin: 1,
+                border:1,
+                filename: "@Model.Title-HGKNews.pdf",
+                Image: { type: 'jpeg' },
+            }
+            html2pdf().from(invoice).set(opt).save();
+        })
+    </script>

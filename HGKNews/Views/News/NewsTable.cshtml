@@ -1,0 +1,105 @@
+﻿@using HGKNews.Models.NewsItem;
+@model IEnumerable<NewsItemModel>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h1 class="mb-4">NewsTable</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-md-1">
+            <a class="btn btn-success mb-4" href="@Url.Action("ExportExcel","News")">Export</a>
+        </div>
+        <div class="col-md-1 ">
+            <form asp-controller="News" asp-action="ImportExcel" method="post" enctype="multipart/form-data">
+                    <input type="file" name="file" class="form-control-file d-none" id="fileInput" accept=".xlsx" required />
+                    <button type="button" class="btn btn-primary" onclick="document.getElementById('fileInput').click();">Import</button>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <table id="example" class="table table-striped mt-4" style="width:100%">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Category</th>
+                <th>Create Date</th>
+                <th>News Date</th>
+                <th>Country</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var news in Model)
+            {
+                <tr>
+                    <td><a href="@Url.Action("Details", "News", new {id = news.Id })"> @news.Title</a></td>
+                    <td>@news.Author</td>
+                    <td>@news.Category</td>
+                    <td>@news.CreateOn</td>
+                    <td>@news.NewsDate.ToString("dd.MM.yyyy")</td>
+                    <td>@news.Country</td>
+                    <td><a class="btn btn-danger" href="@Url.Action("Edit", "News", new {id = news.Id })">Edit</a> <a class="btn btn-danger" href="@Url.Action("Details", "News", new {id = news.Id })">Details</a> </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th id="title">Title</th>
+                <th>Author</th>
+                <th>Category</th>
+                <th>Create Date</th>
+                <th>News Date</th>
+                <th>Country</th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script src="~/js/site.js"></script>
+<script>
+    document.getElementById('fileInput').addEventListener('change', function () {
+        var fileInput = document.getElementById('fileInput');
+
+        if (fileInput.files.length > 0) {
+            document.querySelector('form').submit();
+        }
+    });
+</script>
+
+
+<script>
+    document.getElementById('fileInput').addEventListener('change', function () {
+        var fileInput = document.getElementById('fileInput');
+        var uploadButton = document.getElementById('uploadButton');
+
+        if (fileInput.files.length > 0) {
+            uploadButton.style.display = 'block';
+        } else {
+            uploadButton.style.display = 'none';
+        }
+    });
+</script>
+<script>
+    document.getElementById('fileInput').addEventListener('change', function () {
+        var fileInput = document.getElementById('fileInput');
+
+        if (fileInput.files.length > 0) {
+            var allowedFormats = [".xlsx"];
+            var fileName = fileInput.files[0].name;
+            var fileExtension = fileName.slice(((fileName.lastIndexOf(".") - 1) >>> 0) + 2);
+
+            if (allowedFormats.includes("." + fileExtension)) {
+                document.querySelector('form').submit();
+            } else {
+                alert("Please choose an Excel file.");
+                fileInput.value = "";
+            }
+        }
+    });
+</script>

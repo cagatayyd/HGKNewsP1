@@ -1,0 +1,82 @@
+﻿@using HGKNews.Models.NewsItem;
+@model NewsItemModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script>
+    function clearForm() {
+        document.getElementById("Title").value = "";
+        document.getElementById("Content").value = "";
+        document.getElementById("NewsPicture").value = "";
+        document.getElementById("Country").value = "";
+        document.getElementById("Author").value = "";
+        document.getElementById("Category").value = "";
+        document.getElementById("NewsDate").value = "";
+    }
+
+</script>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between">
+        <h2>Edit News</h2>
+        <div>
+            <form method="post" action="@Url.Action("Delete", "News", new { newsId = Model.Id })" style="display: inline;">
+                @Html.Hidden("newsId", Model.Id)
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Bu haberi silmek istediğinize emin misiniz?')">Delete</button>
+            </form>
+            <button type="button" onclick="clearForm()" class="btn btn-warning">Clear Form</button>
+            <button type="submit" form="editForm" class="btn btn-primary">Save</button>
+        </div>
+
+    </div>
+    <hr />
+
+    <form asp-action="Edit" method="post" enctype="multipart/form-data" id="editForm">
+        <div class="form-group">
+            <label for="Title">Title</label>
+            <input type="text" class="form-control" id="Title" name="Title" value="@Model.Title" required />
+        </div>
+        <div class="form-group">
+            <label for="Author">Author</label>
+            <input type="text" class="form-control" id="Author" name="Author" value="@Model.Author" required />
+        </div>
+        <div class="form-group">
+            <label for="Country">Country</label>
+            <select class="form-control" id="Country" name="Country" required>
+                <option value="@Model.Country">@Model.Country</option>
+                <option value="Afghanistan">Afghanistan</option>
+                <option value="Albania">Albania</option>
+                <option value="Algeria">Algeria</option>
+                <option value="Andorra">Andorra</option>
+                <option value="Angola">Angola</option>
+                <option value="Antigua and Barbuda">Antigua and Barbuda</option>
+                <option value="Argentina">Argentina</option>
+                <option value="Armenia">Armenia</option>
+                <option value="Australia">Australia</option>
+                <option value="Austria">Austria</option>
+                <option value="England">England</option>
+                <option value="Turkey">Turkey</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="NewsDate">News Date</label>
+            <input type="text" class="form-control" id="NewsDate" name="NewsDate" value="@Model.NewsDate.ToString("dd.MM.yyyy")" required />
+        </div>
+        <div class="form-group">
+            <label for="Category">Category</label>
+            <input type="text" class="form-control" id="Category" name="Category" value="@Model.Category" required />
+        </div>
+        <div class="form-group">
+            <label for="Content">Content</label>
+            <textarea class="form-control" id="Content" name="Content" rows="5" required>@Model.Content</textarea>
+        </div>
+
+        <div class="form-group mt-4">
+            <label for="NewsPicture">Resim Yükle</label>
+            <input type="file" class="form-control-file" id="NewsPicture" name="NewsPicture" value="@Model.NewsPicture" accept="image/*" />
+        </div>
+    </form>
+</div>
+
+
+
